@@ -9,6 +9,7 @@ public class Movement : MonoBehaviour
     public float jumpSpeed;
     public float jumpButtonGracePeriod;
 
+    [SerializeField]private Transform cameraTransform;
 
     private Animator animator;
     private CharacterController characterController;
@@ -31,7 +32,7 @@ public class Movement : MonoBehaviour
 
         Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
         float magnitude = Mathf.Clamp01(movementDirection.magnitude) * speed;
-
+        movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
         movementDirection.Normalize();
 
 
@@ -75,6 +76,16 @@ public class Movement : MonoBehaviour
             animator.SetBool("isMoving", false);
         }
     }
-
+    private void OnApplicationFocus(bool focus)
+    {
+        if(focus)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
 
 }
